@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 buildscript {
     repositories {
         mavenLocal()
@@ -8,13 +10,22 @@ buildscript {
 
 
 plugins {
-    kotlin("jvm") version "1.6.10"
+    kotlin("jvm") version "2.3.0"
     `maven-publish`
     jacoco
-    id("org.jetbrains.dokka") version "1.6.10" apply false
+    id("org.jetbrains.dokka") version "1.9.20" apply false
 }
-val targetJvm = 11
+val targetJvm = 25
 
+kotlin {
+    jvmToolchain(targetJvm)
+    compilerOptions {
+        jvmTarget.set(JvmTarget.fromTarget(targetJvm.toString()))
+    }
+}
+
+group = "com.codeyogico"
+version = (findProperty("publishVersion") as String?) ?: "0.1.0-SNAPSHOT"
 
 repositories {
     mavenLocal()
@@ -46,18 +57,30 @@ dependencies {
 }
 
 tasks {
-    compileKotlin {
-        kotlinOptions {
-            jvmTarget = targetJvm.toString()
-        }
-    }
-    compileTestKotlin {
-        kotlinOptions {
-            jvmTarget = "11"
-        }
-    }
     test {
         useJUnitPlatform()
+    }
+}
+
+java {
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/codeyogico/micronaut-httpclient2curl")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
 }
 
