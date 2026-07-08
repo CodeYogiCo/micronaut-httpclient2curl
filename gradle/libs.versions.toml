@@ -1,7 +1,7 @@
 [versions]
 
 junit="5.9.2"
-kotlin="1.8.0"
+kotlin="2.4.0"
 micronaut="3.9.1"
 kotlinCoroutines="1.6.2"
 jackson="2.13.3"
