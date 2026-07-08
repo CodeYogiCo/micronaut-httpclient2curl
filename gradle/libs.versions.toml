@@ -1,8 +1,8 @@
 [versions]
 
 junit="5.9.2"
-kotlin="2.4.0"
-micronaut="3.9.1"
+kotlin="2.3.0"
+micronaut="4.10.16"
 kotlinCoroutines="1.6.2"
 jackson="2.13.3"
 kotest = "5.5.4"
@@ -14,9 +14,10 @@ kotest = "5.5.4"
 # boms
 junitBom= {module="org.junit:junit-bom", version.ref="junit"}
 jacksonBom={module="com.fasterxml.jackson:jackson-bom", version.ref="jackson"}
-micronautBom={module="io.micronaut:micronaut-bom", version.ref="micronaut"}
+micronautBom={module="io.micronaut.platform:micronaut-platform", version.ref="micronaut"}
 
 
+micronautJacksonDatabind={module="io.micronaut:micronaut-jackson-databind"}
 micronautHttpClient={module="io.micronaut:micronaut-http-client"}
 micronautHttp={module="io.micronaut:micronaut-http"}
 micronautHttpServer={module="io.micronaut:micronaut-http-server"}
@@ -29,7 +30,7 @@ micronautRouter={module="io.micronaut:micronaut-router"}
 micronautMicrometerCore={module="io.micronaut.micrometer:micronaut-micrometer-core"}
 micronautRxJava2={module="io.micronaut.rxjava2:micronaut-rxjava2"}
 micronautRxJava3={module="io.micronaut.rxjava3:micronaut-rxjava3"}
-micronautValidation={module="io.micronaut:micronaut-validation"}
+micronautValidation={module="io.micronaut.validation:micronaut-validation"}
 
 
 kotlinStdlib={module="org.jetbrains.kotlin:kotlin-stdlib-jdk8"}
@@ -53,7 +54,7 @@ kotestExtensions = { module = "io.kotest:kotest-extensions", version.ref = "kote
 
 
 [bundles]
-micronaut=["micronautHttpClient","micronautHttp","micronautHttpServer","micronautHttpServerNetty",
+micronaut=["micronautJacksonDatabind","micronautHttpClient","micronautHttp","micronautHttpServer","micronautHttpServerNetty",
     "micronautRuntime","micronautManagement","micronautInject","micronautRouter","micronautMicrometerCore","micronautRxJava2"]
 micronautTest=["micronautTestCore","micronautTestJunit5"]
 kotest=["kotestAssertionsCore","kotestJunit5","kotestProperty","kotestExtensions","micronautTestKotest"]

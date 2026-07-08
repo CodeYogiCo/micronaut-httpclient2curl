@@ -10,7 +10,7 @@ buildscript {
 
 
 plugins {
-    kotlin("jvm") version "2.4.0"
+    kotlin("jvm") version "2.3.0"
     `maven-publish`
     jacoco
     id("org.jetbrains.dokka") version "1.9.20" apply false
