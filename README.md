@@ -23,7 +23,16 @@ Compiled targeting Java 25 bytecode — consumers need JDK 25+ at runtime.
 
 ## Installation
 
-Published to GitHub Packages. Add the repository and dependency to your Gradle build:
+Published to GitHub Packages. GitHub Packages requires authentication to download even from public repositories — you need a GitHub **username** and a **Personal Access Token (PAT)** with `read:packages` scope (your account password will not work). Create one under GitHub Settings → Developer settings → Personal access tokens, then export it rather than hardcoding it:
+
+```bash
+export GITHUB_ACTOR=<your-github-username>
+export GITHUB_TOKEN=<your-personal-access-token>
+```
+
+Add the repository and dependency to your Gradle build.
+
+**Kotlin DSL (`build.gradle.kts`):**
 
 ```kotlin
 repositories {
@@ -41,7 +50,23 @@ dependencies {
 }
 ```
 
-GitHub Packages requires authentication even for public repositories, so consumers need a token with `read:packages` scope.
+**Groovy DSL (`build.gradle`):**
+
+```groovy
+repositories {
+    maven {
+        url = uri("https://maven.pkg.github.com/codeyogico/micronaut-httpclient2curl")
+        credentials {
+            username = System.getenv("GITHUB_ACTOR")
+            password = System.getenv("GITHUB_TOKEN") // needs read:packages scope
+        }
+    }
+}
+
+dependencies {
+    implementation "com.codeyogico:micronaut-httpclient2curl:<version>"
+}
+```
 
 ## Configuration
 
