@@ -25,7 +25,9 @@ kotlin {
 }
 
 group = "com.codeyogico"
-version = "0.1.0-SNAPSHOT"
+version = providers.environmentVariable("RELEASE_VERSION")
+    .map { it.removePrefix("v") }
+    .getOrElse("0.1.0-SNAPSHOT")
 
 repositories {
     mavenLocal()
@@ -70,6 +72,16 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/CodeYogiCo/micronaut-httpclient2curl")
+            credentials {
+                username = System.getenv("GITHUB_ACTOR") ?: findProperty("gpr.user") as String?
+                password = System.getenv("GITHUB_TOKEN") ?: findProperty("gpr.key") as String?
+            }
         }
     }
 }

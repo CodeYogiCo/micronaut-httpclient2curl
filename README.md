@@ -23,7 +23,12 @@ Compiled targeting Java 25 bytecode — consumers need JDK 25+ at runtime.
 
 ## Installation
 
-Published via [JitPack](https://jitpack.io) — no credentials needed, same as `mavenCentral()`. JitPack builds the jar on demand straight from this repo's GitHub tags/releases.
+Available from two registries — pick one:
+
+- **[JitPack](https://jitpack.io)** — no credentials needed; builds the jar on demand from this repo's tags/releases.
+- **[GitHub Packages](https://github.com/CodeYogiCo/micronaut-httpclient2curl/packages)** — prebuilt artifacts published on each release; requires a GitHub personal access token with `read:packages` scope (GitHub Packages does not allow anonymous downloads).
+
+### Option 1: JitPack
 
 **Kotlin DSL (`build.gradle.kts`):**
 
@@ -51,6 +56,53 @@ dependencies {
 
 `<tag>` is any git tag/release (e.g. `v1.0.0`), a commit SHA, or `main-SNAPSHOT` for the latest commit on `main`. The first resolve after a new tag takes a little longer while JitPack builds it; after that it's cached.
 
+### Option 2: GitHub Packages
+
+Put your GitHub username and a token with `read:packages` scope in `~/.gradle/gradle.properties`:
+
+```properties
+gpr.user=YOUR_GITHUB_USERNAME
+gpr.key=YOUR_GITHUB_TOKEN
+```
+
+**Kotlin DSL (`build.gradle.kts`):**
+
+```kotlin
+repositories {
+    maven {
+        url = uri("https://maven.pkg.github.com/CodeYogiCo/micronaut-httpclient2curl")
+        credentials {
+            username = findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
+            password = findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
+}
+
+dependencies {
+    implementation("com.codeyogico:micronaut-httpclient2curl:<version>")
+}
+```
+
+**Groovy DSL (`build.gradle`):**
+
+```groovy
+repositories {
+    maven {
+        url "https://maven.pkg.github.com/CodeYogiCo/micronaut-httpclient2curl"
+        credentials {
+            username = findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+            password = findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+        }
+    }
+}
+
+dependencies {
+    implementation "com.codeyogico:micronaut-httpclient2curl:<version>"
+}
+```
+
+`<version>` is the release tag without the leading `v` (a `v1.0.0` release publishes as version `1.0.0`).
+
 ## Configuration
 
 Both filters are enabled by default and can be turned off independently via `application.yml`:
@@ -65,4 +117,7 @@ curl-logger:
 
 ## Releasing
 
-No publish step required — cut a GitHub Release (or just push a tag) and JitPack builds that version the first time someone requests it.
+Cut a GitHub Release:
+
+- **JitPack** builds that version on demand the first time someone requests it — no publish step.
+- **GitHub Packages** — the `Publish to GitHub Packages` workflow runs automatically on release and publishes the artifacts, using the release tag (minus any leading `v`) as the version. It can also be run manually from the Actions tab, which publishes the current `main` as `0.1.0-SNAPSHOT`.
