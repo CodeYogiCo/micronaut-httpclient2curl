@@ -23,25 +23,33 @@ Compiled targeting Java 25 bytecode — consumers need JDK 25+ at runtime.
 
 ## Installation
 
-Published to GitHub Packages. Add the repository and dependency to your Gradle build:
+Published via [JitPack](https://jitpack.io) — no credentials needed, same as `mavenCentral()`. JitPack builds the jar on demand straight from this repo's GitHub tags/releases.
+
+**Kotlin DSL (`build.gradle.kts`):**
 
 ```kotlin
 repositories {
-    maven {
-        url = uri("https://maven.pkg.github.com/codeyogico/micronaut-httpclient2curl")
-        credentials {
-            username = System.getenv("GITHUB_ACTOR")
-            password = System.getenv("GITHUB_TOKEN") // needs read:packages scope
-        }
-    }
+    maven { url = uri("https://jitpack.io") }
 }
 
 dependencies {
-    implementation("com.codeyogico:micronaut-httpclient2curl:<version>")
+    implementation("com.github.codeyogico:micronaut-httpclient2curl:<tag>")
 }
 ```
 
-GitHub Packages requires authentication even for public repositories, so consumers need a token with `read:packages` scope.
+**Groovy DSL (`build.gradle`):**
+
+```groovy
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
+dependencies {
+    implementation "com.github.codeyogico:micronaut-httpclient2curl:<tag>"
+}
+```
+
+`<tag>` is any git tag/release (e.g. `v1.0.0`), a commit SHA, or `main-SNAPSHOT` for the latest commit on `main`. The first resolve after a new tag takes a little longer while JitPack builds it; after that it's cached.
 
 ## Configuration
 
@@ -57,4 +65,4 @@ curl-logger:
 
 ## Releasing
 
-Publishing runs via the `Publish` GitHub Actions workflow (`.github/workflows/publish.yml`), triggered when a GitHub Release is published. The release tag (e.g. `v1.2.0`) is used as the published artifact version (`1.2.0`).
+No publish step required — cut a GitHub Release (or just push a tag) and JitPack builds that version the first time someone requests it.
